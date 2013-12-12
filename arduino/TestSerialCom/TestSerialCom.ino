@@ -1,46 +1,63 @@
-
-int ledPin = 13;
+// the pin number which gets signals from the sensor
+// indicating the ball is falling
 int triggerPin = 8;
 
-char val;
+// the pin number through which we send signals to
+// the mechanism that blocks the falling ball
+int blockerPin = 13;
 
 void setup()
 {
+  // setup serial connection through which the arduino
+  // communicates with the computer
   Serial.begin(9600);
-  pinMode(ledPin, OUTPUT);
+
+  // we'll be receiving from the triggerPin and
+  // sending through the blockerPin
   pinMode(triggerPin, INPUT);
-  // Need to set the pin to high, because the sensor puts in to low
+  pinMode(blockerPin, OUTPUT);
+
+  // Need to set the pin to high, so we notice when the sensor puts it to low
   digitalWrite(triggerPin, HIGH);
-  // startAnimation();
 }
 
 void loop()
 { 
+  char val;
+
+  // if the sensor is triggered by the ball...
   if(digitalRead(triggerPin) == LOW){
+    // perfrom start animation routine
     startAnimation();
+    // avoid performing multiple start animation routines in a row
+    // delaying for a while (after which the signal on the triggerPin should be HIGH again)
     delay(100);
   }
 
-  if (Serial.available()) 
-  { // If data is available to read,
-     val = Serial.read(); // read it and store it in val
-  }
-  if (val == '1') 
-  { // If 1 was received
-     dropBall();
+  // If a the '1' character was received through the serial connection, drop the ball.
+  // Otherwise (by default) block the ball.
+  if (Serial.available() && Serial.read() == '1') { 
+    dropBall();
   } else {
-     digitalWrite(ledPin, LOW); // otherwise turn it off
+    blockBall();
   }
+
   delay(10); // Wait 10 milliseconds for next reading
 }
 
 void startAnimation()
 {
+  // this will notify the computer that the ball is dropping
   Serial.write('1'); //("StartAnimation");
 }
 
 void dropBall()
 {
-  digitalWrite(ledPin, HIGH); // turn the LED on
-  // Serial.println("DropBall");
+  // this will cause the blocking mechanism to UNblock
+  digitalWrite(blockerPin, HIGH);
+}
+
+void blockBall(){
+  // this will cause the blocking mechanism to block
+  digitalWrite(blockerPin, LOW);
 }
