@@ -17,11 +17,13 @@ class GoldbergMovie
   {
     this.main = main;
 
-    this.movie = new Movie(main, "red-bars.mov");
+    this.movie = new Movie(main, "balls.mov");
     this.startDelay = 0;
     this.endDelay = 12;
 
-    this.initMovieDimensions();
+    // this.initMovieDimensions(); 
+    this.preload();
+
     // center video horizontally on the screen
     this.screenPosX = (int)((this.main.width*0.5) - (this.movie.width * 0.5));
 
@@ -30,7 +32,9 @@ class GoldbergMovie
     main.println("Movie's horizontal position: "+this.screenPosX);
 
     // should we do this?
-    this.movie.frameRate(main.frameRate);
+    // this.movie.frameRate(main.frameRate);
+
+    
   }
   
   void startMovie(){
@@ -39,7 +43,7 @@ class GoldbergMovie
 
   int lengthInFrames(){
     // multiply movie's length in second by number of frames per second
-    return (int)(this.movie.duration() * this.main.frameRate);
+    return (int)(this.movie.duration() * this.movie.frameRate);
   }
 
   void drawNextFrame(){
@@ -57,6 +61,23 @@ class GoldbergMovie
     this.movie.read();
     this.movie.pause();
     this.movie.jump(0.0f);
+  }
+  
+  void preload(){
+    main.println("preloading movie");
+
+    int start = main.millis();
+    
+    this.movie.play();
+
+    while(movie.available()){
+      this.movie.read();
+    }
+
+    this.movie.pause();
+    this.movie.jump(0.0f);
+    
+    main.println("preloading finished in "+ (main.millis() - start)*0.001 + " seconds");
   }
 }
 

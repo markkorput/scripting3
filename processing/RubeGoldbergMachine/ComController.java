@@ -16,9 +16,19 @@ class ComController
   ComController(RubeGoldbergMachine main)
   {
     this.main = main;
-    String portName = Serial.list()[5];
-    serialPort = new Serial(main, portName, 9600);
-    
+    int i, portIndex = 5;
+    String portName = Serial.list()[portIndex];
+
+    main.println("Available serial ports: ");
+    for(i = 0; i<Serial.list().length; i++){
+      if(i == portIndex){
+        main.println(Serial.list()[i] + " <-");
+      }else{
+        main.println(Serial.list()[i]);
+      }
+    }
+
+    serialPort = new Serial(main, portName, 9600);    
   }
   
   //functions
