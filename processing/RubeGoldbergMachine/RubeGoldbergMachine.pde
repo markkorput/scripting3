@@ -23,7 +23,7 @@ GoldbergMovie visual = null;
 void setup()
 {
   frameRate(25);
-  size(1920, 1080);
+  size(1280, 720);
   // com = new ComController(this);
   loadNextVisual();
 }
