@@ -14,14 +14,34 @@ class GoldbergMovie
   int screenPosY = 0;
 
   //constructor
-  GoldbergMovie(RubeGoldbergMachine main)
+//  GoldbergMovie(RubeGoldbergMachine main)
+//  {
+//    this.main = main;
+//
+//    this.movie = new Movie(main, "balls.mov");
+//    this.startDelay = 0;
+//    this.endDelay = 92;
+//
+//
+//    // should we do this?
+//    // this.movie.frameRate(main.frameRate);
+//    initialize();
+//  }
+  
+  GoldbergMovie(RubeGoldbergMachine main, String movie_path, int startDelay, int endDelay)
   {
     this.main = main;
 
-    this.movie = new Movie(main, "balls.mov");
-    this.startDelay = 0;
-    this.endDelay = 92;
+    this.movie = new Movie(main, movie_path);
+    this.startDelay = startDelay;
+    this.endDelay = endDelay;
 
+    // should we do this?
+    // this.movie.frameRate(main.frameRate);
+    initialize();
+  }
+  
+  void initialize(){
     // this.initMovieDimensions(); 
     this.preload();
 
@@ -34,11 +54,6 @@ class GoldbergMovie
     main.println("Screen width: "+this.main.height);
     main.println("Movie's horizontal position: "+this.screenPosX);
     main.println("Movie's vertical position: "+this.screenPosY);
-
-    // should we do this?
-    // this.movie.frameRate(main.frameRate);
-
-    
   }
   
   void startMovie(){

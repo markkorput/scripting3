@@ -64,8 +64,14 @@ void draw()
 }
 
 void loadNextVisual(){
+  String[] movies = {"balls.mov", "bars.mov", "squares.mov"};
+  int[] startDelays = {0,0,0};
+  int[] endDelays = {102, 99, 85};
+
   println("Loading next animation...");
-  visual = new GoldbergMovie(this);
+  int index = (int)random(movies.length);
+//  visual = new GoldbergMovie(this);
+  visual = new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
   animationLength = visual.lengthInFrames();
   println("Animation length: " + animationLength +" frames"); 
   startDelay = visual.startDelay;
