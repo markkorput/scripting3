@@ -23,13 +23,15 @@ GoldbergMovie visual = null;
 void setup()
 {
   frameRate(25);
-  size(1280, 720);
+  size(1024, 768);
   com = new ComController(this);
   loadNextVisual();
 }
 
-void draw()
+void draw() 
 {
+  background(0,0,0);
+  
   if(frameCount == startAnimationFrame){
     startAnimation();
   }

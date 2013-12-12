@@ -11,6 +11,7 @@ class GoldbergMovie
   int endDelay = 12; // number of frames BEFORE the end of the animation to release the ball
 
   int screenPosX = 0;
+  int screenPosY = 0;
 
   //constructor
   GoldbergMovie(RubeGoldbergMachine main)
@@ -19,17 +20,20 @@ class GoldbergMovie
 
     this.movie = new Movie(main, "balls.mov");
     this.startDelay = 0;
-    this.endDelay = 12;
+    this.endDelay = 92;
 
     // this.initMovieDimensions(); 
     this.preload();
 
     // center video horizontally on the screen
     this.screenPosX = (int)((this.main.width*0.5) - (this.movie.width * 0.5));
+    this.screenPosY = (int)((this.main.height*0.5) - (this.movie.height * 0.5));
 
     main.println("Movie size: "+this.movie.width+"x"+this.movie.height+"px");
     main.println("Screen width: "+this.main.width);
+    main.println("Screen width: "+this.main.height);
     main.println("Movie's horizontal position: "+this.screenPosX);
+    main.println("Movie's vertical position: "+this.screenPosY);
 
     // should we do this?
     // this.movie.frameRate(main.frameRate);
@@ -50,7 +54,7 @@ class GoldbergMovie
     // this.main.println("Checking for next frame...");
     if (this.movie.available()) {
       this.movie.read();
-      main.image(this.movie, screenPosX, 0);
+      main.image(this.movie, screenPosX, screenPosY);
     }
   }
   
