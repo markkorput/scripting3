@@ -2,12 +2,20 @@ import processing.serial.*;
 
 ComController com;
 
-int animationLength = 100;
-int startDelay = 0;
-int endDelay = 12;
+static int animationLength = 100; // length of animation in frames
+static int startDelay = 0; // number of frames to wait between trigger and starting animation 
+static int endDelay = 12; // number of frames BEFORE the end of the animation to release the ball
+static int unblockLength = 20; // how long (also in frames) to unblock
 
-int animationCounter = -1;
-int countdownCounter = -1;
+int startAnimationFrame = -1;
+int endAnimationFrame = -1;
+int unblockFrame = -1;
+int blockFrame = -1;
+
+static char BLOCK = '0';
+static char UNBLOCK = '1';
+
+char blockingSignal = BLOCK;
 
 void setup()
 {
@@ -17,71 +25,57 @@ void setup()
 
 void draw()
 {
-  // when the countdown is done, start the/an animation
-  if(countdownCounter == 0){
-    println("Countdown over");
-    startAnimation();
+  if(frameCount == startAnimationFrame){
+    // startAnimation();
+  }
+  
+  if(frameCount == endAnimationFrame){
+    // DO NOTHING
   }
 
-  // decrease countdown counter until it's back at -1
-  if(countdownCounter == -1){  
-    animationCounter -= 1;
+  if(frameCount == unblockFrame){
+    println("Unblocking ball at frame "+frameCount);
+    blockingSignal = UNBLOCK;
+    // schedule switching back to blocking
+    blockFrame = frameCount + unblockLength;
   }
 
-  // for the last 12 frames (0.5 seconds) of the animation, 
-  // send '1' to the arduino, unblocking the ball
-  if(animationCounter > 0 && animationCounter < endDelay){
-    println("Unblocking ball");
-    // unblock ball
-    com.sendMessage('1');
-  } else {
-    // (continue to) block ball
-    com.sendMessage('0');
+  if(frameCount == blockFrame){
+    println("Reblocking ball at frame "+frameCount);
+    blockingSignal = BLOCK;
   }
 
-  // count-down each frame
-  if(animationCounter > 0){
-    animationCounter -= 1;
-  }
-
+  com.sendMessage(blockingSignal);
   com.read();
 }
 
 void onMessageReceived(String message)
 {
   println("Message received: " + message);
+  // does nothing else; we don't really use this anymore
 }
 
 void onByteReceived(char message){
   println("Byte received: "+message);
 
   if(message == '1'){
-    startAnimationCountdown();
+    scheduleAnimation();
   }
 }
 
-void startAnimationCountdown(){
-  // can't start animation countdown when an animation is still running or we're already counting down
-  if(animationCounter == 0 && countdownCounter == 0){
-    // if the countdown is configured to be less than one frame;
-    // start animation immediately, otherwise; initialize countdown
-    if(startDelay < 1){
-      startAnimation();
-    } else {
-      println("Starting animation countdown ("+startDelay+") frames");
-      countdownCounter = startDelay;
-    }
-  } else {
-    println("Can't start animation countdown; another animation or countdown is still running");
-  }
+boolean animationRunning(){
+  return endAnimationFrame > frameCount;
 }
 
-void startAnimation(){
-  // can't start animation when an animation is still running
-  if(animationCounter == 0){
-    println("Starting animation");
-    animationCounter = animationLength;
-  } else {
-    println("Can't start animation; another animation is still running.");
+void scheduleAnimation(){
+  if(animationRunning()){
+    println("Can't schedule animation; another animation is still running.");
+    return;
   }
+
+  println("Starting animation countdown ("+startDelay+") frames");
+  startAnimationFrame = frameCount + startDelay;
+  endAnimationFrame = startAnimationFrame + animationLength;
+  unblockFrame = endAnimationFrame - endDelay;
 }
+
