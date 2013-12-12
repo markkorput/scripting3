@@ -1,7 +1,7 @@
 import processing.serial.*;
 import processing.video.*;
 
-// ComController com;
+ComController com;
 
 int animationLength = 100; // length of animation in frames
 int startDelay = 0; // number of frames to wait between trigger and starting animation 
@@ -24,7 +24,7 @@ void setup()
 {
   frameRate(25);
   size(1280, 720);
-  // com = new ComController(this);
+  com = new ComController(this);
   loadNextVisual();
 }
 
@@ -57,8 +57,8 @@ void draw()
     loadNextVisual();
   }
 
-  //com.sendMessage(blockingSignal);
-  //com.read();
+  com.sendMessage(blockingSignal);
+  com.read();
 }
 
 void loadNextVisual(){
