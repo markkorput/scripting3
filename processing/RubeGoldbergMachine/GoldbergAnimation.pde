@@ -11,6 +11,8 @@ class GoldbergAnimation
 
   PVector startPos, endPos;
 
+  int ballSize = 20;
+
   // constructor
   GoldbergAnimation(){
     // this constructor isn't really used, but for some reason it's needed
@@ -38,8 +40,8 @@ class GoldbergAnimation
 
   void initialize(){
     startFrame = -1;
-    startPos = new PVector(main.width*0.5, 0); // center top
-    endPos = new PVector(main.width*0.5, main.height-1); // center bottom
+    startPos = new PVector(main.width*0.5, -ballSize); // center top
+    endPos = new PVector(main.width*0.5, main.height+ballSize*2); // center bottom
     
     pg = createGraphics(main.width, main.height);
   }
@@ -88,7 +90,7 @@ class GoldbergAnimation
       // get current position of the ball
       PVector ballPos = currentBallPosition();
       // draw the ball as a simple circle
-      pg.ellipse(ballPos.x, ballPos.y, 20, 20);
+      pg.ellipse(ballPos.x, ballPos.y, ballSize, ballSize);
     pg.endDraw();
     
     // draw this animation's framebuffer to the screen

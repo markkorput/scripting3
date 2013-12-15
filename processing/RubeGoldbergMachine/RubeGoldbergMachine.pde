@@ -76,13 +76,17 @@ void loadNextVisual(){
 
   println("Loading next animation...");
 
-//  // pick a random movie
-//  int index = (int)random(movies.length);
-//  // initialize movie object
-//  //  visual = new GoldbergMovie(this);
-//  visual = new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
-//  
-  visual = new GoldbergAnimation(this);
+  // pick a random movie
+  int index = (int)random(movies.length + 1);
+  
+  // pick a movie?
+  if(index < movies.length){
+    // initialize movie object
+    visual = (GoldbergAnimation) new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
+  // or pick the animation?
+  } else {
+    visual = new GoldbergAnimation(this);
+  }
 }
 
 void onByteReceived(char message){
@@ -95,11 +99,16 @@ void onByteReceived(char message){
   }
 }
 
-// for debugging purposes we can also trigger the next animation
-// by pressing the space bar
 void keyPressed() {
+  // for debugging purposes we can also trigger the next animation
+  // by pressing the space bar
   if(key == ' '){
     scheduleAnimation();
+  }
+  
+  // TAB key - abort animation, make the next frame the endAnimationFrame 
+  if(keyCode == TAB){
+    endAnimationFrame = frameCount + 1;
   }
 }
 
