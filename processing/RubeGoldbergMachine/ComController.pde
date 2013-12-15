@@ -16,7 +16,7 @@ class ComController
   ComController(RubeGoldbergMachine main)
   {
     this.main = main;
-    int i, portIndex = 5;
+    int i, portIndex = Serial.list().length-1;
     String portName = Serial.list()[portIndex];
 
     // print all serial ports for debugging
