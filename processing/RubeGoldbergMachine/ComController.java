@@ -28,29 +28,30 @@ class ComController
       }
     }
 
-    serialPort = new Serial(main, portName, 9600);    
+    try{
+      serialPort = new Serial(main, portName, 9600);
+    } catch(Exception E){
+      main.println("Couldn't establish serial connection");
+      serialPort = null;
+    }    
   }
   
   //functions
   void read()
   {
+    if(serialPort == null){
+      // main.println("Serial port not initialized, cannot read");
+      return;
+    }
+
     if ( this.serialPort.available() > 0) 
     {  
       //this.msg = this.serialPort.readString(); //Until('\n');
       this.incomingByte = this.serialPort.readChar(); //Until('\n');
     } 
     
-//    if (msg != null && msg != lastMsg)
-//    {
-//      main.onMessageReceived(this.msg); //Run the event on main sketch
-//      this.lastMsg = this.msg;
-//    }
-//    
-//        
-
     if (this.incomingByte != this.lastByte)
     {
-      
       main.onByteReceived(this.incomingByte); //Run the event on main sketch
       this.lastByte = this.incomingByte;
     }
@@ -58,6 +59,10 @@ class ComController
   
   void sendMessage(char msg)
   {
+    if(serialPort == null){
+      // main.println("Serial port not initialized, cannot write \""+msg+"\"");
+      return;
+    }
     serialPort.write(msg);
   }
 }

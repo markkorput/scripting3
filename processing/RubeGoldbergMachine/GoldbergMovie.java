@@ -14,20 +14,19 @@ class GoldbergMovie
   int screenPosY = 0;
 
   //constructor
-//  GoldbergMovie(RubeGoldbergMachine main)
-//  {
-//    this.main = main;
-//
-//    this.movie = new Movie(main, "balls.mov");
-//    this.startDelay = 0;
-//    this.endDelay = 92;
-//
-//
-//    // should we do this?
-//    // this.movie.frameRate(main.frameRate);
-//    initialize();
-//  }
-  
+  GoldbergMovie(RubeGoldbergMachine main)
+  {
+    this.main = main;
+
+    this.movie = new Movie(main, "balls.mov");
+    this.startDelay = 0;
+    this.endDelay = 92;
+
+    // should we do this?
+    // this.movie.frameRate(main.frameRate);
+    initialize();
+  }
+
   GoldbergMovie(RubeGoldbergMachine main, String movie_path, int startDelay, int endDelay)
   {
     this.main = main;

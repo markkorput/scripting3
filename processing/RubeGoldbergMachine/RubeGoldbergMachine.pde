@@ -78,12 +78,6 @@ void loadNextVisual(){
   endDelay = visual.endDelay;
 }
 
-void onMessageReceived(String message)
-{
-  println("Message received: " + message);
-  // does nothing else; we don't really use this anymore
-}
-
 void onByteReceived(char message){
   println("Byte received: "+message);
 
