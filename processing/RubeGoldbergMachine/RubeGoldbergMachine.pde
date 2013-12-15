@@ -1,6 +1,3 @@
-import processing.serial.*;
-import processing.video.*;
-
 // our serial communication object
 ComController com;
 
