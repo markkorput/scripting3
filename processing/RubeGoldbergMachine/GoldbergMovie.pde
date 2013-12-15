@@ -1,6 +1,10 @@
 import processing.video.*;
 
-class GoldbergMovie
+// having this GolbergMovie class EXTEND the GoldberAnimation class is a really
+// ugly way to allow the main script (RubeGoldbergMachine) to use these two classes
+// interchangeably. We should probably use java's Interface mechanism here
+// (implements instead of extends), but I couldn't quickly find a way to get this working...
+class GoldbergMovie extends GoldbergAnimation
 {
   //vars
   RubeGoldbergMachine main;
@@ -15,6 +19,8 @@ class GoldbergMovie
   //constructor
   GoldbergMovie(RubeGoldbergMachine main)
   {
+    super(main);
+
     this.main = main;
 
     // default movie

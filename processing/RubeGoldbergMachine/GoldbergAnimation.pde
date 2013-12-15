@@ -12,6 +12,11 @@ class GoldbergAnimation
   PVector startPos, endPos;
 
   // constructor
+  GoldbergAnimation(){
+    // this constructor isn't really used, but for some reason it's needed
+    // to make the GoldberMovie class extend this class
+  }
+
   GoldbergAnimation(RubeGoldbergMachine main)
   {
     this.main = main;
