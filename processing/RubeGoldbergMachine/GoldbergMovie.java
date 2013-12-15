@@ -53,7 +53,7 @@ class GoldbergMovie
     main.println("Movie position: "+this.screenPosX+","+this.screenPosY);
   }
   
-  void startMovie(){
+  void start(){
     this.movie.play();
   }
 
@@ -69,7 +69,7 @@ class GoldbergMovie
       main.image(this.movie, screenPosX, screenPosY);
     }
   }
-  
+
   void initMovieDimensions(){
     // movie.width and movie.height won't be initialized until the first frame is read;
     // so start the movie, read a frame, pause the movie and reset position to beginning 

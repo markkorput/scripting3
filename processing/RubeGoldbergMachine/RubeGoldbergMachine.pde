@@ -22,7 +22,7 @@ char blockingSignal = BLOCK;
 int unblockLength = 20; 
 
 
-GoldbergMovie visual = null;
+GoldbergAnimation visual = null;
 
 void setup()
 {
@@ -42,7 +42,7 @@ void draw()
 {
   if(frameCount == startAnimationFrame){
     println("Starting animation");
-    visual.startMovie();
+    visual.start();
   }
 
   if(frameCount == endAnimationFrame){
@@ -79,11 +79,13 @@ void loadNextVisual(){
 
   println("Loading next animation...");
 
-  // pick a random movie
-  int index = (int)random(movies.length);
-  // initialize movie object
-  //  visual = new GoldbergMovie(this);
-  visual = new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
+//  // pick a random movie
+//  int index = (int)random(movies.length);
+//  // initialize movie object
+//  //  visual = new GoldbergMovie(this);
+//  visual = new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
+//  
+  visual = new GoldbergAnimation(this);
 }
 
 void onByteReceived(char message){
