@@ -1,44 +1,55 @@
 import processing.serial.*;
 import processing.video.*;
 
+// our serial communication object
 ComController com;
 
-int animationLength = 100; // length of animation in frames
-int startDelay = 0; // number of frames to wait between trigger and starting animation 
-int endDelay = 12; // number of frames BEFORE the end of the animation to release the ball
-int unblockLength = 20; // how long (also in frames) to unblock
-
+// we use frame numbers to schedule these four types of events
+// -1 means unscheduled, because `frameCount` will never be -1
 int startAnimationFrame = -1;
 int endAnimationFrame = -1;
 int unblockFrame = -1;
 int blockFrame = -1;
 
-static char BLOCK = '0';
+// byte-message sent through the serial connection
+static char BLOCK = '0'; 
 static char UNBLOCK = '1';
 
-char blockingSignal = BLOCK;
+// Block by default
+char blockingSignal = BLOCK; 
+
+// how long (in frames) to unblock when dropping the ball
+int unblockLength = 20; 
+
 
 GoldbergMovie visual = null;
 
 void setup()
 {
   frameRate(25);
+  // beamer resolution
   size(1024, 768);
+  // initialize serial communication object
   com = new ComController(this);
+
+  // preload first visual
   loadNextVisual();
+  // clear the screen
+  background(0,0,0);
 }
 
 void draw() 
 {
-  background(0,0,0);
-  
   if(frameCount == startAnimationFrame){
-    startAnimation();
+    println("Starting animation");
+    visual.startMovie();
   }
 
-  //if(frameCount == endAnimationFrame){
-    // DO NOTHING
-  //}
+  if(frameCount == endAnimationFrame){
+    // as soon as one animation if done, load the next one
+    loadNextVisual();
+    background(0,0,0);
+  }
 
   if(animationRunning()){
     visual.drawNextFrame();
@@ -54,9 +65,6 @@ void draw()
   if(frameCount == blockFrame){
     println("Reblocking ball at frame "+frameCount);
     blockingSignal = BLOCK;
-
-    // we're done with the current routine, load next visual
-    loadNextVisual();
   }
 
   com.sendMessage(blockingSignal);
@@ -64,56 +72,64 @@ void draw()
 }
 
 void loadNextVisual(){
+  // predefined movies
   String[] movies = {"balls.mov", "bars.mov", "squares.mov"};
   int[] startDelays = {0,0,0};
   int[] endDelays = {102, 99, 85};
 
   println("Loading next animation...");
+
+  // pick a random movie
   int index = (int)random(movies.length);
-//  visual = new GoldbergMovie(this);
+  // initialize movie object
+  //  visual = new GoldbergMovie(this);
   visual = new GoldbergMovie(this, movies[index], startDelays[index], endDelays[index]);
-  animationLength = visual.lengthInFrames();
-  println("Animation length: " + animationLength +" frames"); 
-  startDelay = visual.startDelay;
-  endDelay = visual.endDelay;
 }
 
 void onByteReceived(char message){
   println("Byte received: "+message);
 
+  // getting a '1' byte through the serial connection
+  // means we should start a new animation
   if(message == '1'){
     scheduleAnimation();
   }
 }
 
+// for debugging purposes we can also trigger the next animation
+// by pressing the space bar
 void keyPressed() {
   if(key == ' '){
     scheduleAnimation();
   }
 }
 
+// if the endAnimationFrame is still coming, this means there's an active animation
+// scheduled or still running
 boolean animationScheduled(){
   return endAnimationFrame > frameCount;
 }
 
+// if the current frame if somewhere between startAnimationFrame and endAnimationFrame
+// this means an animation is currently running
 boolean animationRunning(){
   return frameCount >= startAnimationFrame && frameCount < endAnimationFrame;
 }
 
 void scheduleAnimation(){
+  // Abort if there's already an animation scheduled;
+  // can't schedule multiple animation simultanously
   if(animationScheduled()){
     println("Can't schedule animation; another animation is still running.");
     return;
   }
 
-  println("Starting animation countdown ("+startDelay+") frames");
-  startAnimationFrame = frameCount + startDelay + 1;
-  endAnimationFrame = startAnimationFrame + animationLength;
-  unblockFrame = endAnimationFrame - endDelay;
-}
-
-void startAnimation(){
-  println("Starting animation");
-  visual.startMovie();
+  println("Starting animation in ("+visual.startDelay+") frames");
+  // schedule startAnimation, endAnimation and unblock events
+  // for the next animation
+  // (the reblock event will be scheduled by the unblocking) 
+  startAnimationFrame = frameCount + visual.startDelay + 1;
+  endAnimationFrame = startAnimationFrame + visual.lengthInFrames();
+  unblockFrame = endAnimationFrame - visual.endDelay;
 }
 

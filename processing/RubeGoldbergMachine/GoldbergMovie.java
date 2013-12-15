@@ -6,7 +6,6 @@ class GoldbergMovie
   RubeGoldbergMachine main;
   Movie movie;
 
-  int animationLength = 100; // length of animation in frames
   int startDelay; // number of frames to wait between trigger and starting animation 
   int endDelay = 12; // number of frames BEFORE the end of the animation to release the ball
 
@@ -18,6 +17,7 @@ class GoldbergMovie
   {
     this.main = main;
 
+    // default movie
     this.movie = new Movie(main, "balls.mov");
     this.startDelay = 0;
     this.endDelay = 92;
@@ -49,10 +49,8 @@ class GoldbergMovie
     this.screenPosY = (int)((this.main.height*0.5) - (this.movie.height * 0.5));
 
     main.println("Movie size: "+this.movie.width+"x"+this.movie.height+"px");
-    main.println("Screen width: "+this.main.width);
-    main.println("Screen width: "+this.main.height);
-    main.println("Movie's horizontal position: "+this.screenPosX);
-    main.println("Movie's vertical position: "+this.screenPosY);
+    main.println("Screen size: "+this.main.width+"x"+this.main.height+"px");
+    main.println("Movie position: "+this.screenPosX+","+this.screenPosY);
   }
   
   void startMovie(){
